@@ -64,8 +64,11 @@ public class VillageBuff implements ModInitializer {
 						.with(LootItem.lootTableItem(Items.IRON_SHOVEL).setWeight(25).build())
 						.with(LootItem.lootTableItem(Items.IRON_HOE).setWeight(25).build())
 						.with(LootItem.lootTableItem(Items.IRON_SWORD).setWeight(25).build())
-						.with(LootItem.lootTableItem(Items.DIAMOND_SWORD).setWeight(10).build());
-
+						.with(LootItem.lootTableItem(Items.DIAMOND_SWORD).setWeight(10).apply(new SetEnchantmentsFunction.Builder()
+								.withEnchantment(
+										registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
+										ConstantValue.exactly(3)
+								)).build());
 
 				LootPool.Builder ironPool = LootPool.lootPool()
 						.setRolls(UniformGenerator.between(3.0F, 6.0F))
@@ -73,6 +76,14 @@ public class VillageBuff implements ModInitializer {
 								.apply(SetItemCountFunction.setCount(UniformGenerator.between(10.0F, 24.0F)))
 								.build()
 						);
+
+				LootPool.Builder foodPool = LootPool.lootPool()
+						.setRolls(UniformGenerator.between(1, 3))
+						.with(LootItem.lootTableItem(Items.GOLDEN_APPLE)
+								.apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))
+								.build()
+						);
+
 
 				// Inject all four distinct pools into the chest layout
 				tableBuilder.pool(diamondPool.build());
