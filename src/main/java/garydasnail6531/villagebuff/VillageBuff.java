@@ -2,10 +2,15 @@ package garydasnail6531.villagebuff;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.trading.ItemCost;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -64,11 +69,13 @@ public class VillageBuff implements ModInitializer {
 						.with(LootItem.lootTableItem(Items.IRON_SHOVEL).setWeight(25).build())
 						.with(LootItem.lootTableItem(Items.IRON_HOE).setWeight(25).build())
 						.with(LootItem.lootTableItem(Items.IRON_SWORD).setWeight(25).build())
-						.with(LootItem.lootTableItem(Items.DIAMOND_SWORD).setWeight(10).apply(new SetEnchantmentsFunction.Builder()
-								.withEnchantment(
-										registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-										ConstantValue.exactly(3)
-								)).build());
+						.with(LootItem.lootTableItem(Items.DIAMOND_SWORD).setWeight(10)
+								// .apply(new SetEnchantmentsFunction.Builder()
+//								.withEnchantment(
+//										registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
+//										ConstantValue.exactly(3)
+//								)).
+								.build());
 
 				LootPool.Builder ironPool = LootPool.lootPool()
 						.setRolls(UniformGenerator.between(3.0F, 6.0F))
@@ -120,12 +127,164 @@ public class VillageBuff implements ModInitializer {
 								.build()
 						);
 
+				LootPool.Builder tanneryMendingPool = LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1))
+						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+								.apply((LootItemFunction.Builder) () -> {
+									try {
+										Constructor<SetEnchantmentsFunction> constructor =
+												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
+
+										constructor.setAccessible(true);
+
+										return constructor.newInstance(
+												List.of(),
+												Map.of(
+														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
+														ConstantValue.exactly(1)
+												),
+												false
+										);
+									} catch (ReflectiveOperationException exception) {
+										throw new RuntimeException("Failed to create Mending enchanted book loot function", exception);
+									}
+								})
+								.build()
+						);
+
+				LootPool.Builder tanneryEfficiencyPool = LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1))
+						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+								.apply((LootItemFunction.Builder) () -> {
+									try {
+										Constructor<SetEnchantmentsFunction> constructor =
+												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
+
+										constructor.setAccessible(true);
+
+										return constructor.newInstance(
+												List.of(),
+												Map.of(
+														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY),
+														ConstantValue.exactly(5)
+												),
+												false
+										);
+									} catch (ReflectiveOperationException exception) {
+										throw new RuntimeException("Failed to create Efficiency V enchanted book loot function", exception);
+									}
+								})
+								.build()
+						);
+
+
+				LootPool.Builder tannerySilkTouchPool = LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1))
+						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+								.apply((LootItemFunction.Builder) () -> {
+									try {
+										Constructor<SetEnchantmentsFunction> constructor =
+												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
+
+										constructor.setAccessible(true);
+
+										return constructor.newInstance(
+												List.of(),
+												Map.of(
+														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH),
+														ConstantValue.exactly(1)
+												),
+												false
+										);
+									} catch (ReflectiveOperationException exception) {
+										throw new RuntimeException("Failed to create Silk Touch enchanted book loot function", exception);
+									}
+								})
+								.build()
+						);
+
+				LootPool.Builder tanneryProtectionPool = LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1))
+						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+								.apply((LootItemFunction.Builder) () -> {
+									try {
+										Constructor<SetEnchantmentsFunction> constructor =
+												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
+
+										constructor.setAccessible(true);
+
+										return constructor.newInstance(
+												List.of(),
+												Map.of(
+														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.PROTECTION),
+														ConstantValue.exactly(4)
+												),
+												false
+										);
+									} catch (ReflectiveOperationException exception) {
+										throw new RuntimeException("Failed to create Protection VI enchanted book loot function", exception);
+									}
+								})
+								.build()
+						);
 				tableBuilder.pool(tanneryUnbreakingPool.build());
+				tableBuilder.pool(tanneryMendingPool.build());
+				tableBuilder.pool(tanneryEfficiencyPool.build());
+				tableBuilder.pool(tannerySilkTouchPool.build());
+				tableBuilder.pool(tanneryProtectionPool.build());
 			}
 		});
-	}
+
+		// Add a trade to Blacksmith level 1 (Novice)
+		TradeOfferHelper.registerVillagerOffers(VillagerProfession.WEAPONSMITH, 1, factories -> {
+			factories.add((level, entity, random) -> new MerchantOffer(
+					new ItemCost(Items.IRON_SWORD, 1), // Cost A
+					new ItemStack(Items.DIAMOND_SWORD, 1), // Resulting item
+					500,  // Max uses
+					200000,  // Experience given
+					0.00f // Price multiplier
+			));
+
+			factories.add((level, entity, random) -> new MerchantOffer(
+					new ItemCost(Items.DIAMOND, 8),
+					new ItemStack(Items.DIAMOND_BLOCK, 1),
+					500, // Max uses
+					200000, // Experience given
+					0.00f // Price multiplier
+			)
+			);
+		}); // <-- closes Weaponsmith Level 1
+
+		TradeOfferHelper.registerVillagerOffers(VillagerProfession.WEAPONSMITH, 2, factories -> {
+			factories.add((level, entity, random) -> new MerchantOffer(
+					new ItemCost(Items.DIAMOND_SWORD, 2),
+					new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1),
+					500,
+					200000,
+					0.00f
+			));
+
+			TradeOfferHelper.registerVillagerOffers(VillagerProfession.WEAPONSMITH, 2, factories -> {
+				factories.add((level, entity, random) -> new MerchantOffer(
+						new ItemCost(Items.DIAMOND_BLOCK, 64),
+						new ItemStack(Items.NETHERITE_SCRAP, 1),
+						500,
+						200000,
+						0.00f
+				));
+
+			factories.add((level, entity, random) -> new MerchantOffer(
+					new ItemCost(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1),
+					new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2),
+					500,
+					200000,
+					0.00f
+			));
+		}); // <-- closes Weaponsmith Level 2
+	} // <-- closes onInitialize()
 
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
-}
+
+} // <-- closes VillageBuff
