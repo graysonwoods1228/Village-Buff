@@ -1,0 +1,21 @@
+diff a/src/main/java/garydasnail6531/villagebuff/VillageBuff.java b/src/main/java/garydasnail6531/villagebuff/VillageBuff.java	(rejected hunks)
+@@ -264,12 +264,13 @@
+ 					0.00f
+ 			));
+ 
+-			factories.add((level, entity, random) -> new MerchantOffer(
+-					new ItemCost(Items.DIAMOND_BLOCK, 64),
+-					new ItemStack(Items.NETHERITE_SCRAP, 1),
+-					500,
+-					200000,
+-					0.00f
++			TradeOfferHelper.registerVillagerOffers(VillagerProfession.WEAPONSMITH, 2, factories -> {
++				factories.add((level, entity, random) -> new MerchantOffer(
++						new ItemCost(Items.DIAMOND_BLOCK, 64),
++						new ItemStack(Items.NETHERITE_SCRAP, 1),
++						500,
++						200000,
++						0.00f
+ 				));
+ 
+ 			factories.add((level, entity, random) -> new MerchantOffer(
