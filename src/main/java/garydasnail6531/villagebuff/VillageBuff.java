@@ -1,5 +1,6 @@
 package garydasnail6531.villagebuff;
 
+import com.mojang.datafixers.DSL;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
@@ -31,6 +32,12 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.chunk.LevelChunk;
+import garydasnail6531.villagebuff.mixin.ItemPools;
+import garydasnail6531.villagebuff.mixin.tanneryPools;
+
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,287 +61,17 @@ public class VillageBuff implements ModInitializer {
 			// 1. Advanced Weaponsmith chest overhaul
 			if (BuiltInLootTables.VILLAGE_WEAPONSMITH.equals(key)) {
 
-				// Pool 1: Scattered Diamonds (Total 3 to 18)
-				// We roll 3 to 6 separate times, grabbing 1 to 3 diamonds per slot
-				LootPool.Builder diamondPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(3.0F, 6.0F))
-						.with(LootItem.lootTableItem(Items.DIAMOND)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))
-								.build()
-						);
-
-				// Pool 2: Scattered Obsidian (Total 3 to 10)
-				// We roll 3 to 5 separate times, grabbing 1 to 2 obsidian blocks per slot
-				LootPool.Builder obsidianPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(3.0F, 5.0F))
-						.with(LootItem.lootTableItem(Items.OBSIDIAN)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
-								.build()
-						);
-
-				// Pool 3: Iron Tools Lottery (Always drops 1 to 2 random un-enchanted iron tools)
-				// Tools don't stack, so we keep the count at 1, but roll 1 to 2 times to scatter them
-				LootPool.Builder swordPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(1.0F, 1.0F))
-						.with(LootItem.lootTableItem(Items.DIAMOND_SWORD).setWeight(10)
-								 .apply(new SetEnchantmentsFunction.Builder()
-								.withEnchantment(
-										registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-										ConstantValue.exactly(3)
-								)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SHARPNESS),
-												ConstantValue.exactly(5)
-								)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FIRE_ASPECT),
-												ConstantValue.exactly(2)
-								)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.KNOCKBACK),
-												ConstantValue.exactly(2)
-								)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
-												ConstantValue.exactly(1)
-								)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.LOOTING),
-												ConstantValue.exactly(3)
-								))
-								.build());
-
-				LootPool.Builder pickPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(1.0F, 1.0F))
-						.with(LootItem.lootTableItem(Items.DIAMOND_PICKAXE).setWeight(10)
-								.apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-												ConstantValue.exactly(3)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY),
-												ConstantValue.exactly(5)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
-												ConstantValue.exactly(1)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE),
-												ConstantValue.exactly(3)
-										))
-								.build());
-
-				LootPool.Builder pickPool2 = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(1.0F, 1.0F))
-						.with(LootItem.lootTableItem(Items.DIAMOND_PICKAXE).setWeight(10)
-								.apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-												ConstantValue.exactly(3)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY),
-												ConstantValue.exactly(5)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
-												ConstantValue.exactly(1)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH),
-												ConstantValue.exactly(1)
-										))
-								.build());
-
-				LootPool.Builder axePool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(1.0F, 1.0F))
-						.with(LootItem.lootTableItem(Items.DIAMOND_AXE).setWeight(10)
-								.apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-												ConstantValue.exactly(3)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY),
-												ConstantValue.exactly(5)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
-												ConstantValue.exactly(1)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH),
-												ConstantValue.exactly(1)
-										)).apply(new SetEnchantmentsFunction.Builder()
-										.withEnchantment(
-												registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SWEEPING_EDGE),
-												ConstantValue.exactly(5)
-										))
-								.build());
-
-				LootPool.Builder ironPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(3.0F, 6.0F))
-						.with(LootItem.lootTableItem(Items.IRON_INGOT)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(10.0F, 24.0F)))
-								.build()
-						);
-
-				LootPool.Builder foodPool = LootPool.lootPool()
-						.setRolls(UniformGenerator.between(1, 3))
-						.with(LootItem.lootTableItem(Items.GOLDEN_APPLE)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))
-								.build()
-						);
-
-
-				// Inject all distinct pools into the chest layout
-				tableBuilder.pool(diamondPool.build());
-				tableBuilder.pool(obsidianPool.build());
-				tableBuilder.pool(swordPool.build());
-				tableBuilder.pool(ironPool.build());
-				tableBuilder.pool(pickPool.build());
-				tableBuilder.pool(pickPool2.build());
-				 tableBuilder.pool(foodPool.build());
-				 tableBuilder.pool(axePool.build());
+				ItemPools.init(registries, tableBuilder);
 
 			}
 
 			// 2. Modifying regular Plains Village houses (Keeping your previous guaranteed setup)
 			// Tannery chest loot
 			if (BuiltInLootTables.VILLAGE_TANNERY.equals(key)) {
-				LootPool.Builder tanneryUnbreakingPool = LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1))
-						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-								.apply((LootItemFunction.Builder) () -> {
-									try {
-										Constructor<SetEnchantmentsFunction> constructor =
-												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
 
-										constructor.setAccessible(true);
-
-										return constructor.newInstance(
-												List.of(),
-												Map.of(
-														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.UNBREAKING),
-														ConstantValue.exactly(3)
-												),
-												false
-										);
-									} catch (ReflectiveOperationException exception) {
-										throw new RuntimeException("Failed to create Unbreaking III enchanted book loot function", exception);
-									}
-								})
-								.build()
-						);
-
-				LootPool.Builder tanneryMendingPool = LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1))
-						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-								.apply((LootItemFunction.Builder) () -> {
-									try {
-										Constructor<SetEnchantmentsFunction> constructor =
-												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
-
-										constructor.setAccessible(true);
-
-										return constructor.newInstance(
-												List.of(),
-												Map.of(
-														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.MENDING),
-														ConstantValue.exactly(1)
-												),
-												false
-										);
-									} catch (ReflectiveOperationException exception) {
-										throw new RuntimeException("Failed to create Mending enchanted book loot function", exception);
-									}
-								})
-								.build()
-						);
-
-				LootPool.Builder tanneryEfficiencyPool = LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1))
-						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-								.apply((LootItemFunction.Builder) () -> {
-									try {
-										Constructor<SetEnchantmentsFunction> constructor =
-												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
-
-										constructor.setAccessible(true);
-
-										return constructor.newInstance(
-												List.of(),
-												Map.of(
-														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.EFFICIENCY),
-														ConstantValue.exactly(5)
-												),
-												false
-										);
-									} catch (ReflectiveOperationException exception) {
-										throw new RuntimeException("Failed to create Efficiency V enchanted book loot function", exception);
-									}
-								})
-								.build()
-						);
-
-
-				LootPool.Builder tannerySilkTouchPool = LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1))
-						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-								.apply((LootItemFunction.Builder) () -> {
-									try {
-										Constructor<SetEnchantmentsFunction> constructor =
-												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
-
-										constructor.setAccessible(true);
-
-										return constructor.newInstance(
-												List.of(),
-												Map.of(
-														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH),
-														ConstantValue.exactly(1)
-												),
-												false
-										);
-									} catch (ReflectiveOperationException exception) {
-										throw new RuntimeException("Failed to create Silk Touch enchanted book loot function", exception);
-									}
-								})
-								.build()
-						);
-
-				LootPool.Builder tanneryProtectionPool = LootPool.lootPool()
-						.setRolls(ConstantValue.exactly(1))
-						.with(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
-								.apply((LootItemFunction.Builder) () -> {
-									try {
-										Constructor<SetEnchantmentsFunction> constructor =
-												SetEnchantmentsFunction.class.getDeclaredConstructor(List.class, Map.class, boolean.class);
-
-										constructor.setAccessible(true);
-
-										return constructor.newInstance(
-												List.of(),
-												Map.of(
-														registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.PROTECTION),
-														ConstantValue.exactly(4)
-												),
-												false
-										);
-									} catch (ReflectiveOperationException exception) {
-										throw new RuntimeException("Failed to create Protection VI enchanted book loot function", exception);
-									}
-								})
-								.build()
-						);
-				tableBuilder.pool(tanneryUnbreakingPool.build());
-				tableBuilder.pool(tanneryMendingPool.build());
-				tableBuilder.pool(tanneryEfficiencyPool.build());
-				tableBuilder.pool(tannerySilkTouchPool.build());
-				tableBuilder.pool(tanneryProtectionPool.build());
+				tanneryPools.init(registries, tableBuilder);
 			}
+
 		});
 
 		// Make newly generated weaponsmith chests into double chests
