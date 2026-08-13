@@ -1,4 +1,4 @@
-package garydasnail6531.villagebuff.mixin;
+package garydasnail6531.villagebuff;
 
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-public class ItemPools {
+public class BlacksmithPools {
 
     public static void init(HolderGetter.Provider registries, LootTable.Builder tableBuilder) {
 

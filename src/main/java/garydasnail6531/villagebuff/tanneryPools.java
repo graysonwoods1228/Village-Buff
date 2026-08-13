@@ -1,4 +1,4 @@
-package garydasnail6531.villagebuff.mixin;
+package garydasnail6531.villagebuff;
 
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
