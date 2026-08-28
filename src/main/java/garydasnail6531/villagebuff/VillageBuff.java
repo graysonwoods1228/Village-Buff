@@ -52,9 +52,6 @@ public class VillageBuff implements ModInitializer {
 			makeWeaponsmithChestsDouble(world, chunk);
 		});
 
-
-
-
 		} // <-- closes onInitialize()
 
 	private static void makeWeaponsmithChestsDouble(ServerLevel world, LevelChunk chunk) {
