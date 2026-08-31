@@ -1,6 +1,7 @@
 package garydasnail6531.villagebuff;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.minecraft.resources.Identifier;
@@ -28,6 +29,13 @@ public class VillageBuff implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
+		CommandRegistrationCallback.EVENT.register(
+				(dispatcher, registryAccess, environment) -> {
+					BlacksmithTradesCommands.register(dispatcher);
+					FarmerTradesCommands.register(dispatcher);
+				}
+		);
 
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 
