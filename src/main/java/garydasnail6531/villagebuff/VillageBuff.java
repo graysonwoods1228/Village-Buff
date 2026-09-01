@@ -34,6 +34,7 @@ public class VillageBuff implements ModInitializer {
 				(dispatcher, registryAccess, environment) -> {
 					BlacksmithTradesCommands.register(dispatcher);
 					FarmerTradesCommands.register(dispatcher);
+					ClericTradesCommands.register(dispatcher);
 				}
 		);
 

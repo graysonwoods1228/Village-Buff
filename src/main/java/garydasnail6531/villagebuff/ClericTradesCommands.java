@@ -13,18 +13,18 @@ import net.minecraft.world.item.trading.MerchantOffers;
 
 import java.util.List;
 
-public class BlacksmithTradesCommands {
+public class ClericTradesCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
         dispatcher.register(
                 Commands.literal("function")
-                        .then(Commands.literal("blacksmithtrades")
+                        .then(Commands.literal("clerictrades")
 
                                 .then(
                                         Commands.argument(
                                                 "level",
-                                                IntegerArgumentType.integer(1, 3)
+                                                IntegerArgumentType.integer(1, 1)
                                         )
 
                                         .executes(context -> {
@@ -41,14 +41,8 @@ public class BlacksmithTradesCommands {
                                             ServerLevel world =
                                                     source.getLevel();
 
-
-                                            /*
-                                             * Get the trades directly from
-                                             * BlacksmithTrades.java
-                                             */
-                                            List<BlacksmithTrades.TradeData> trades =
-                                                    BlacksmithTrades.getTradesForLevel(level);
-
+                                            List<ClericTrades.TradeData> trades =
+                                                    ClericTrades.getTradesForLevel(level);
 
                                             if (trades.isEmpty()) {
 
@@ -61,14 +55,8 @@ public class BlacksmithTradesCommands {
                                                 return 0;
                                             }
 
-
                                             int villagersChanged = 0;
 
-
-                                            /*
-                                             * Find every Weaponsmith villager
-                                             * in the current dimension.
-                                             */
                                             for (var entity : world.getAllEntities()) {
 
                                                 if (!(entity instanceof Villager villager)) {
@@ -77,26 +65,14 @@ public class BlacksmithTradesCommands {
 
                                                 if (!villager.getVillagerData()
                                                         .profession()
-                                                        .is(VillagerProfession.WEAPONSMITH)) {
+                                                        .is(VillagerProfession.CLERIC)) {
                                                     continue;
                                                 }
 
-
-                                                /*
-                                                 * Get the villager's current offers.
-                                                 */
                                                 MerchantOffers offers =
                                                         villager.getOffers();
 
-
-                                                /*
-                                                 * Add every trade from the
-                                                 * selected level.
-                                                 */
-                                                for (
-                                                        BlacksmithTrades.TradeData trade :
-                                                        trades
-                                                ) {
+                                                for (ClericTrades.TradeData trade : trades) {
 
                                                     MerchantOffer newOffer =
                                                             trade.createOffer();
@@ -104,15 +80,9 @@ public class BlacksmithTradesCommands {
                                                     offers.add(newOffer);
                                                 }
 
-
                                                 villagersChanged++;
                                             }
 
-
-                                            /*
-                                             * Tell the player how many villagers
-                                             * were changed.
-                                             */
                                             int tradeCount = trades.size();
                                             int finalVillagersChanged = villagersChanged;
 
@@ -124,11 +94,10 @@ public class BlacksmithTradesCommands {
                                                                     level +
                                                                     " trade(s) to " +
                                                                     finalVillagersChanged +
-                                                                    " Weaponsmith villager(s)."
+                                                                    " Cleric villager(s)."
                                                     ),
                                                     true
                                             );
-
 
                                             return villagersChanged;
                                         })
