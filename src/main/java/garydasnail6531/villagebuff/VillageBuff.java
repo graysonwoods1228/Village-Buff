@@ -5,8 +5,14 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -16,9 +22,12 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.Vec3;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 
 public class VillageBuff implements ModInitializer {
@@ -65,7 +74,7 @@ public class VillageBuff implements ModInitializer {
 
 	private static void makeWeaponsmithChestsDouble(ServerLevel world, LevelChunk chunk) {
 
-		for (BlockEntity blockEntity : chunk.getBlockEntities().values()) {
+		for (BlockEntity blockEntity : new ArrayList<>(chunk.getBlockEntities().values())) {
 
 			if (!(blockEntity instanceof ChestBlockEntity chest)) {
 				continue;
@@ -114,8 +123,8 @@ public class VillageBuff implements ModInitializer {
 					? ChestType.RIGHT
 					: ChestType.LEFT;
 
-			// Keep the original chest's existing loot table.
-			var lootTable = chest.getLootTable();
+			// Generate this loot once into the combined double chest inventory.
+			ResourceKey<LootTable> lootTableKey = chest.getLootTable();
 			long lootSeed = chest.getLootTableSeed();
 
 			// Change the original chest into one half.
@@ -135,27 +144,37 @@ public class VillageBuff implements ModInitializer {
 			BlockEntity secondBlockEntity = world.getBlockEntity(secondPos);
 
 			if (secondBlockEntity instanceof ChestBlockEntity secondChest) {
-
-				// IMPORTANT:
-				// The second half does NOT get its own loot table.
-				secondChest.setLootTable(null);
-
-				// Restore the original loot table to the original half.
 				ChestBlockEntity originalChest =
 						(ChestBlockEntity) world.getBlockEntity(originalPos);
 
 				if (originalChest != null) {
-					originalChest.setLootTable(lootTable);
-
-					if (lootSeed != 0L) {
-						originalChest.setLootTableSeed(lootSeed);
-					}
+					fillDoubleChestLoot(world, originalPos, originalChest, secondChest, lootTableKey, lootSeed);
 				}
 			}
-
-			// Only do this once for this chest.
-			return;
 		}
+	}
+
+	private static void fillDoubleChestLoot(
+			ServerLevel world,
+			BlockPos origin,
+			ChestBlockEntity originalChest,
+			ChestBlockEntity secondChest,
+			ResourceKey<LootTable> lootTableKey,
+			long lootSeed
+	) {
+		originalChest.setLootTable(null);
+		originalChest.setLootTableSeed(0L);
+		secondChest.setLootTable(null);
+		secondChest.setLootTableSeed(0L);
+
+		LootTable lootTable = world.getServer().reloadableRegistries().getLootTable(lootTableKey);
+		LootParams lootParams = new LootParams.Builder(world)
+				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(origin))
+				.create(LootContextParamSets.CHEST);
+
+		lootTable.fill(new CompoundContainer(originalChest, secondChest), lootParams, lootSeed);
+		originalChest.setChanged();
+		secondChest.setChanged();
 	}
 
 	public static Identifier id(String path) {
