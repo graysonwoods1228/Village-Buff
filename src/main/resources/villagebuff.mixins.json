@@ -3,7 +3,8 @@
 	"package": "garydasnail6531.villagebuff.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"ShulkerBoxNestingMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

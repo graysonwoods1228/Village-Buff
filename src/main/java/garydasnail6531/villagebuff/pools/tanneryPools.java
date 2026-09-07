@@ -1,4 +1,4 @@
-package garydasnail6531.villagebuff;
+package garydasnail6531.villagebuff.pools;
 
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;

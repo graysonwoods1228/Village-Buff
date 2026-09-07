@@ -1,15 +1,11 @@
-package garydasnail6531.villagebuff;
+package garydasnail6531.villagebuff.pools;
 
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 public class BlacksmithPools {

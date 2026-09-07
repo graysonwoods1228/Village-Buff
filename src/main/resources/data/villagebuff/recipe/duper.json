@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "RCR",
+    "DND",
+    "RCR"
+  ],
+  "key": {
+    "R": "minecraft:redstone",
+    "C": "minecraft:crafter",
+    "D": "minecraft:dropper",
+    "N": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "id": "villagebuff:duper",
+    "count": 1
+  }
+}
