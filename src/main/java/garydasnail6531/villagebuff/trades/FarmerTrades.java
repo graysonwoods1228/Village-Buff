@@ -36,7 +36,7 @@ public class FarmerTrades {
                     new ItemCost(Items.GOLDEN_APPLE, 128),
                     new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 1),
                     500,
-                    200000,
+                    99999999,
                     0.00f
                 ),
 
@@ -44,7 +44,7 @@ public class FarmerTrades {
                     new ItemCost(Items.WHEAT_SEEDS, 1),
                     new ItemStack(Items.WHEAT, 1),
                     500,
-                    200000,
+                    99999999,
                     0.00f
                 ),
 
@@ -52,7 +52,7 @@ public class FarmerTrades {
                     new ItemCost(Items.EMERALD, 3),
                     new ItemStack(Items.GOLDEN_CARROT, 3),
                     500,
-                    200000,
+                    99999999,
                     0.00f
                 )
         );
@@ -64,7 +64,7 @@ public class FarmerTrades {
                         new ItemCost(Items.EMERALD, 1),
                         new ItemStack(Items.COOKED_BEEF, 64),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );

@@ -19,16 +19,15 @@ public class FletcherTradesCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
         dispatcher.register(
-                Commands.literal("function")
+                Commands.literal("villagebuff")
                         .then(Commands.literal("fletchertrades")
-
                                 .then(
-                                        Commands.argument(
-                                                "level",
-                                                IntegerArgumentType.integer(1, 1)
-                                        )
+                                Commands.argument(
+                                        "level",
+                                        IntegerArgumentType.integer(1, 1)
+                                )
 
-                                        .executes(context -> {
+                                .executes(context -> {
 
                                             int level =
                                                     IntegerArgumentType.getInteger(
@@ -101,7 +100,7 @@ public class FletcherTradesCommands {
                                             );
 
                                             return villagersChanged;
-                                        })
+                                })
                                 )
                         )
         );

@@ -10,7 +10,7 @@
     "R": "minecraft:redstone",
     "C": "minecraft:crafter",
     "D": "minecraft:dropper",
-    "N": "minecraft:netherite_ingot"
+    "N": "minecraft:diamond"
   },
   "result": {
     "id": "villagebuff:duper",

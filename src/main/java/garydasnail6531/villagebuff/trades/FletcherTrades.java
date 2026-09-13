@@ -36,7 +36,7 @@ public class FletcherTrades {
                         new ItemCost(Items.STICK, 1),
                         new ItemStack(Items.EMERALD, 64),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );

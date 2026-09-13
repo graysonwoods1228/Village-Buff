@@ -19,16 +19,15 @@ public class BlacksmithTradesCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
         dispatcher.register(
-                Commands.literal("function")
+                Commands.literal("villagebuff")
                         .then(Commands.literal("blacksmithtrades")
-
                                 .then(
-                                        Commands.argument(
-                                                "level",
-                                                IntegerArgumentType.integer(1, 3)
-                                        )
+                                Commands.argument(
+                                        "level",
+                                        IntegerArgumentType.integer(1, 3)
+                                )
 
-                                        .executes(context -> {
+                                .executes(context -> {
 
                                             int level =
                                                     IntegerArgumentType.getInteger(
@@ -132,7 +131,7 @@ public class BlacksmithTradesCommands {
 
 
                                             return villagersChanged;
-                                        })
+                                })
                                 )
                         )
         );

@@ -5,8 +5,19 @@ import garydasnail6531.villagebuff.commands.BlacksmithTradesCommands;
 import garydasnail6531.villagebuff.commands.ClericTradesCommands;
 import garydasnail6531.villagebuff.commands.FarmerTradesCommands;
 import garydasnail6531.villagebuff.commands.FletcherTradesCommands;
+import garydasnail6531.villagebuff.commands.TeleportBastionCommands;
+import garydasnail6531.villagebuff.commands.TeleportVillageCommands;
+import garydasnail6531.villagebuff.pools.BastionChestPools;
 import garydasnail6531.villagebuff.pools.BastionTreasurePools;
 import garydasnail6531.villagebuff.pools.BlacksmithPools;
+import garydasnail6531.villagebuff.pools.EndCityTreasurePools;
+import garydasnail6531.villagebuff.pools.MineshaftPools;
+import garydasnail6531.villagebuff.pools.PiglinBarteringPools;
+import garydasnail6531.villagebuff.pools.PillagerOutpostPools;
+import garydasnail6531.villagebuff.pools.ShipwreckPools;
+import garydasnail6531.villagebuff.pools.SpawnBonusChestPools;
+import garydasnail6531.villagebuff.pools.StrongholdPools;
+import garydasnail6531.villagebuff.pools.TrialChamberPools;
 import garydasnail6531.villagebuff.pools.tanneryPools;
 import garydasnail6531.villagebuff.trades.FletcherTrades;
 import net.fabricmc.api.ModInitializer;
@@ -28,6 +39,7 @@ public class VillageBuff implements ModInitializer {
 	public void onInitialize() {
 
 		DuperBlocks.init();
+		BastionCleanup.init();
 
 		CommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess, environment) -> {
@@ -35,6 +47,8 @@ public class VillageBuff implements ModInitializer {
 					FarmerTradesCommands.register(dispatcher);
 					ClericTradesCommands.register(dispatcher);
 					FletcherTradesCommands.register(dispatcher);
+					TeleportBastionCommands.register(dispatcher);
+					TeleportVillageCommands.register(dispatcher);
 				}
 		);
 
@@ -59,6 +73,57 @@ public class VillageBuff implements ModInitializer {
 			if (BuiltInLootTables.BASTION_TREASURE.equals(key)) {
 
 				BastionTreasurePools.init(registries, tableBuilder);
+				BastionChestPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.END_CITY_TREASURE.equals(key)) {
+
+				EndCityTreasurePools.init(registries, tableBuilder);
+			}
+
+			if (BuiltInLootTables.ABANDONED_MINESHAFT.equals(key)) {
+				MineshaftPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.BASTION_OTHER.equals(key)
+					|| BuiltInLootTables.BASTION_BRIDGE.equals(key)
+					|| BuiltInLootTables.BASTION_HOGLIN_STABLE.equals(key)) {
+				BastionChestPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.SHIPWRECK_SUPPLY.equals(key)) {
+				ShipwreckPools.supply(tableBuilder);
+			}
+
+			if (BuiltInLootTables.SHIPWRECK_TREASURE.equals(key)) {
+				ShipwreckPools.treasure(tableBuilder);
+			}
+
+			if (BuiltInLootTables.SHIPWRECK_MAP.equals(key)) {
+				ShipwreckPools.map(tableBuilder);
+			}
+
+			if (BuiltInLootTables.TRIAL_CHAMBERS_REWARD_UNIQUE.equals(key)
+					|| BuiltInLootTables.TRIAL_CHAMBERS_REWARD_OMINOUS_UNIQUE.equals(key)) {
+				TrialChamberPools.maceBoost(tableBuilder);
+			}
+
+			if (BuiltInLootTables.STRONGHOLD_LIBRARY.equals(key)
+					|| BuiltInLootTables.STRONGHOLD_CROSSING.equals(key)
+					|| BuiltInLootTables.STRONGHOLD_CORRIDOR.equals(key)) {
+				StrongholdPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.PILLAGER_OUTPOST.equals(key)) {
+				PillagerOutpostPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.PIGLIN_BARTERING.equals(key)) {
+				PiglinBarteringPools.init(tableBuilder);
+			}
+
+			if (BuiltInLootTables.SPAWN_BONUS_CHEST.equals(key)) {
+				SpawnBonusChestPools.init(tableBuilder);
 			}
 
 		});

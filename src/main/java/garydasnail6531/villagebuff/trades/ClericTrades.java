@@ -38,7 +38,7 @@ public class ClericTrades {
                         new ItemCost(Items.ROTTEN_FLESH, 1),
                         new ItemStack(Items.EMERALD, 3),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -46,7 +46,7 @@ public class ClericTrades {
                         new ItemCost(Items.ROTTEN_FLESH, 1),
                         new ItemStack(Items.GOLDEN_CARROT, 3),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );
@@ -58,7 +58,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 1),
                         new ItemStack(Items.ROTTEN_FLESH, 2),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -66,7 +66,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 10),
                         PotionContents.createItemStack(Items.SPLASH_POTION, Potions.INVISIBILITY),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -74,7 +74,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 10),
                         PotionContents.createItemStack(Items.SPLASH_POTION, Potions.WATER_BREATHING),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -82,7 +82,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 3),
                         new ItemStack(Items.EXPERIENCE_BOTTLE, 64),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -90,7 +90,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 1),
                         new ItemStack(Items.NETHER_WART, 1),
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -98,7 +98,7 @@ public class ClericTrades {
                         new ItemCost(Items.EMERALD, 1),
                         new ItemStack(Items.BLAZE_ROD, 2),
                         500,
-                        200000,
+                        99999999,
                         0f
                 )
         );

@@ -56,7 +56,7 @@ public class BlacksmithTrades {
     public static ItemStack maxedNetheriteChestplate(RegistryAccess registryAccess) {
         ItemStack stack = new ItemStack(Items.NETHERITE_CHESTPLATE, 1);
         enchantStandardArmor(registryAccess, stack);
-        trim(registryAccess, stack, TrimPatterns.SILENCE, TrimMaterials.AMETHYST);
+        trim(registryAccess, stack, TrimPatterns.SILENCE, TrimMaterials.REDSTONE);
         return stack;
     }
 
@@ -64,7 +64,7 @@ public class BlacksmithTrades {
         ItemStack stack = new ItemStack(Items.NETHERITE_LEGGINGS, 1);
         enchantStandardArmor(registryAccess, stack);
         enchant(registryAccess, stack, Enchantments.SWIFT_SNEAK, 3);
-        trim(registryAccess, stack, TrimPatterns.RIB, TrimMaterials.REDSTONE);
+        trim(registryAccess, stack, TrimPatterns.RIB, TrimMaterials.AMETHYST);
         return stack;
     }
 
@@ -99,6 +99,18 @@ public class BlacksmithTrades {
         enchant(registryAccess, stack, Enchantments.FIRE_ASPECT, 2);
         enchant(registryAccess, stack, Enchantments.LOOTING, 10);
         enchant(registryAccess, stack, Enchantments.SWEEPING_EDGE, 3);
+        return stack;
+    }
+
+    public static ItemStack maxedNetheriteSpear(RegistryAccess registryAccess) {
+        ItemStack stack = new ItemStack(Items.NETHERITE_SPEAR, 1);
+        enchantStandardTool(registryAccess, stack);
+        enchant(registryAccess, stack, Enchantments.SHARPNESS, 5);
+        enchant(registryAccess, stack, Enchantments.IMPALING, 5);
+        enchant(registryAccess, stack, Enchantments.LOYALTY, 3);
+        enchant(registryAccess, stack, Enchantments.RIPTIDE, 3);
+        enchant(registryAccess, stack, Enchantments.CHANNELING, 1);
+        enchant(registryAccess, stack, Enchantments.LUNGE, 3);
         return stack;
     }
 
@@ -232,7 +244,7 @@ public class BlacksmithTrades {
                         new ItemCost(Items.IRON_SWORD, 2),
                         BlacksmithTrades::diamondSword,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -241,7 +253,7 @@ public class BlacksmithTrades {
                         new ItemCost(Items.DIAMOND, 8),
                         BlacksmithTrades::diamondBlock,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );
@@ -262,7 +274,7 @@ public class BlacksmithTrades {
                         new ItemCost(Items.DIAMOND_SWORD, 2),
                         BlacksmithTrades::netheriteUpgradeTemplate,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -271,7 +283,7 @@ public class BlacksmithTrades {
                         new ItemCost(Items.DIAMOND_BLOCK, 64),
                         BlacksmithTrades::netheriteIngot,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -280,7 +292,7 @@ public class BlacksmithTrades {
                         new ItemCost(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1),
                         BlacksmithTrades::doubledNetheriteUpgradeTemplate,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );
@@ -302,7 +314,7 @@ public class BlacksmithTrades {
 //                        new ItemStack(Items.NETHERITE_HELMET),
                         BlacksmithTrades::maxedNetheriteHelmet,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -312,7 +324,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_BOOTS, 1),
                         BlacksmithTrades::maxedNetheriteBoots,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -322,7 +334,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_CHESTPLATE, 1),
                         BlacksmithTrades::maxedNetheriteChestplate,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -332,7 +344,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_LEGGINGS, 1),
                         BlacksmithTrades::maxedNetheriteLeggings,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -342,7 +354,16 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_SWORD, 1),
                         BlacksmithTrades::maxedNetheriteSword,
                         500,
-                        200000,
+                        99999999,
+                        0.00f
+                ),
+
+                // 2 Netherite Ingots -> 1 Maxed Netherite Spear
+                new TradeData(
+                        new ItemCost(Items.NETHERITE_INGOT, 2),
+                        BlacksmithTrades::maxedNetheriteSpear,
+                        500,
+                        99999999,
                         0.00f
                 ),
 
@@ -352,7 +373,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_PICKAXE, 1),
                         BlacksmithTrades::maxedNetheriteFortunePickaxe,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -362,7 +383,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_PICKAXE, 1),
                         BlacksmithTrades::maxedNetheriteSilkTouchPickaxe,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -372,7 +393,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_AXE, 1),
                         BlacksmithTrades::maxedNetheriteAxe,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -382,7 +403,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_SHOVEL, 1),
                         BlacksmithTrades::maxedNetheriteShovel,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 ),
 
@@ -392,7 +413,7 @@ public class BlacksmithTrades {
 //                        new ItemCost(Items.NETHERITE_HOE, 1),
                         BlacksmithTrades::maxedNetheriteHoe,
                         500,
-                        200000,
+                        99999999,
                         0.00f
                 )
         );
