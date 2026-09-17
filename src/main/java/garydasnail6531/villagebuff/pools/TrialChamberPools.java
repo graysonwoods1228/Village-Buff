@@ -12,7 +12,7 @@ public class TrialChamberPools {
         tableBuilder.pool(LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1.0F))
                 .with(LootItem.lootTableItem(Items.MACE).setWeight(1).build())
-                .with(EmptyLootItem.emptyItem().setWeight(9).build())
+                .with(EmptyLootItem.emptyItem().setWeight(19).build())
                 .build());
     }
 }

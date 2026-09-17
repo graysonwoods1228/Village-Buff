@@ -22,53 +22,47 @@ public class EndCityTreasurePools {
 
     public static void init(HolderGetter.Provider registries, LootTable.Builder tableBuilder) {
         LootPool.Builder endRichesPool = LootPool.lootPool()
-                .setRolls(UniformGenerator.between(8.0F, 14.0F))
-                .with(stacked(Items.DIAMOND_BLOCK, 8.0F, 32.0F).setWeight(18).build())
-                .with(stacked(Items.EMERALD_BLOCK, 8.0F, 32.0F).setWeight(16).build())
-                .with(stacked(Items.GOLD_BLOCK, 16.0F, 48.0F).setWeight(16).build())
-                .with(stacked(Items.SHULKER_SHELL, 16.0F, 64.0F).setWeight(18).build())
-                .with(stacked(Items.ENDER_PEARL, 16.0F, 64.0F).setWeight(14).build())
-                .with(stacked(Items.CHORUS_FRUIT, 32.0F, 64.0F).setWeight(12).build())
-                .with(stacked(Items.DRAGON_BREATH, 8.0F, 24.0F).setWeight(10).build())
-                .with(stacked(Items.NETHERITE_INGOT, 4.0F, 16.0F).setWeight(12).build())
-                .with(stacked(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2.0F, 8.0F).setWeight(8).build())
-                .with(stacked(Items.ENCHANTED_GOLDEN_APPLE, 4.0F, 16.0F).setWeight(8).build())
-                .with(stacked(Items.TOTEM_OF_UNDYING, 1.0F, 4.0F).setWeight(6).build())
-                .with(stacked(DuperBlocks.DUPER_ITEM, 1.0F, 1.0F).setWeight(3).build());
+                .setRolls(UniformGenerator.between(2.0F, 4.0F))
+                .with(stacked(Items.DIAMOND, 2.0F, 6.0F).setWeight(18).build())
+                .with(stacked(Items.EMERALD, 3.0F, 9.0F).setWeight(16).build())
+                .with(stacked(Items.GOLD_INGOT, 6.0F, 18.0F).setWeight(14).build())
+                .with(stacked(Items.SHULKER_SHELL, 2.0F, 6.0F).setWeight(10).build())
+                .with(stacked(Items.ENDER_PEARL, 4.0F, 12.0F).setWeight(10).build())
+                .with(stacked(Items.CHORUS_FRUIT, 8.0F, 24.0F).setWeight(8).build())
+                .with(stacked(Items.NETHERITE_SCRAP, 1.0F, 2.0F).setWeight(3).build())
+                .with(stacked(Items.ENCHANTED_GOLDEN_APPLE, 1.0F, 1.0F).setWeight(2).build())
+                .with(stacked(DuperBlocks.DUPER_ITEM, 1.0F, 1.0F).setWeight(1).build());
 
         LootPool.Builder rareEndPool = LootPool.lootPool()
-                .setRolls(UniformGenerator.between(2.0F, 4.0F))
-                .with(stacked(Items.ELYTRA, 1.0F, 1.0F).setWeight(12).build())
-                .with(stacked(Items.DRAGON_HEAD, 1.0F, 2.0F).setWeight(8).build())
-                .with(stacked(Items.END_CRYSTAL, 4.0F, 16.0F).setWeight(10).build())
-                .with(stacked(Items.BEACON, 1.0F, 2.0F).setWeight(5).build())
-                .with(stacked(Items.NETHER_STAR, 1.0F, 3.0F).setWeight(4).build());
+                .setRolls(UniformGenerator.between(1.0F, 1.0F))
+                .with(stacked(Items.ELYTRA, 1.0F, 1.0F).setWeight(2).build())
+                .with(stacked(Items.DRAGON_HEAD, 1.0F, 1.0F).setWeight(4).build())
+                .with(stacked(Items.END_CRYSTAL, 1.0F, 3.0F).setWeight(8).build());
 
         LootPool.Builder gearPool = LootPool.lootPool()
-                .setRolls(UniformGenerator.between(3.0F, 6.0F))
+                .setRolls(UniformGenerator.between(1.0F, 2.0F))
                 .with(maxedSword(registries).setWeight(10).build())
                 .with(maxedFortunePickaxe(registries).setWeight(9).build())
                 .with(maxedSilkTouchPickaxe(registries).setWeight(9).build())
                 .with(maxedAxe(registries).setWeight(8).build())
-                .with(maxedDiggingTool(registries, Items.NETHERITE_SHOVEL).setWeight(7).build())
-                .with(maxedDiggingTool(registries, Items.NETHERITE_HOE).setWeight(7).build())
+                .with(maxedDiggingTool(registries, Items.DIAMOND_SHOVEL).setWeight(7).build())
+                .with(maxedDiggingTool(registries, Items.DIAMOND_HOE).setWeight(7).build())
                 .with(maxedBow(registries).setWeight(8).build())
-                .with(maxedCrossbow(registries).setWeight(8).build())
-                .with(maxedMace(registries).setWeight(5).build());
+                .with(maxedCrossbow(registries).setWeight(8).build());
 
         LootPool.Builder armorPool = LootPool.lootPool()
-                .setRolls(UniformGenerator.between(2.0F, 4.0F))
-                .with(maxedArmor(registries, Items.NETHERITE_HELMET)
+                .setRolls(UniformGenerator.between(1.0F, 2.0F))
+                .with(maxedArmor(registries, Items.DIAMOND_HELMET)
                         .apply(enchant(registries, Enchantments.RESPIRATION, 3.0F))
                         .apply(enchant(registries, Enchantments.AQUA_AFFINITY, 1.0F))
                         .setWeight(8)
                         .build())
-                .with(maxedArmor(registries, Items.NETHERITE_CHESTPLATE).setWeight(8).build())
-                .with(maxedArmor(registries, Items.NETHERITE_LEGGINGS)
+                .with(maxedArmor(registries, Items.DIAMOND_CHESTPLATE).setWeight(8).build())
+                .with(maxedArmor(registries, Items.DIAMOND_LEGGINGS)
                         .apply(enchant(registries, Enchantments.SWIFT_SNEAK, 3.0F))
                         .setWeight(8)
                         .build())
-                .with(maxedArmor(registries, Items.NETHERITE_BOOTS)
+                .with(maxedArmor(registries, Items.DIAMOND_BOOTS)
                         .apply(enchant(registries, Enchantments.FEATHER_FALLING, 4.0F))
                         .apply(enchant(registries, Enchantments.DEPTH_STRIDER, 3.0F))
                         .apply(enchant(registries, Enchantments.SOUL_SPEED, 3.0F))
@@ -95,7 +89,7 @@ public class EndCityTreasurePools {
     }
 
     private static LootPoolSingletonContainer.Builder<?> maxedSword(HolderGetter.Provider registries) {
-        return LootItem.lootTableItem(Items.NETHERITE_SWORD)
+        return LootItem.lootTableItem(Items.DIAMOND_SWORD)
                 .apply(enchantStandardTool(registries))
                 .apply(enchant(registries, Enchantments.SHARPNESS, 5.0F))
                 .apply(enchant(registries, Enchantments.FIRE_ASPECT, 2.0F))
@@ -104,21 +98,21 @@ public class EndCityTreasurePools {
     }
 
     private static LootPoolSingletonContainer.Builder<?> maxedFortunePickaxe(HolderGetter.Provider registries) {
-        return LootItem.lootTableItem(Items.NETHERITE_PICKAXE)
+        return LootItem.lootTableItem(Items.DIAMOND_PICKAXE)
                 .apply(enchantStandardTool(registries))
                 .apply(enchant(registries, Enchantments.EFFICIENCY, 5.0F))
                 .apply(enchant(registries, Enchantments.FORTUNE, 3.0F));
     }
 
     private static LootPoolSingletonContainer.Builder<?> maxedSilkTouchPickaxe(HolderGetter.Provider registries) {
-        return LootItem.lootTableItem(Items.NETHERITE_PICKAXE)
+        return LootItem.lootTableItem(Items.DIAMOND_PICKAXE)
                 .apply(enchantStandardTool(registries))
                 .apply(enchant(registries, Enchantments.EFFICIENCY, 5.0F))
                 .apply(enchant(registries, Enchantments.SILK_TOUCH, 1.0F));
     }
 
     private static LootPoolSingletonContainer.Builder<?> maxedAxe(HolderGetter.Provider registries) {
-        return maxedDiggingTool(registries, Items.NETHERITE_AXE)
+        return maxedDiggingTool(registries, Items.DIAMOND_AXE)
                 .apply(enchant(registries, Enchantments.SHARPNESS, 5.0F));
     }
 
@@ -134,24 +128,14 @@ public class EndCityTreasurePools {
                 .apply(enchantStandardTool(registries))
                 .apply(enchant(registries, Enchantments.POWER, 5.0F))
                 .apply(enchant(registries, Enchantments.PUNCH, 2.0F))
-                .apply(enchant(registries, Enchantments.FLAME, 1.0F))
-                .apply(enchant(registries, Enchantments.INFINITY, 1.0F));
+                .apply(enchant(registries, Enchantments.FLAME, 1.0F));
     }
 
     private static LootPoolSingletonContainer.Builder<?> maxedCrossbow(HolderGetter.Provider registries) {
         return LootItem.lootTableItem(Items.CROSSBOW)
                 .apply(enchantStandardTool(registries))
-                .apply(enchant(registries, Enchantments.MULTISHOT, 1.0F))
                 .apply(enchant(registries, Enchantments.PIERCING, 4.0F))
                 .apply(enchant(registries, Enchantments.QUICK_CHARGE, 3.0F));
-    }
-
-    private static LootPoolSingletonContainer.Builder<?> maxedMace(HolderGetter.Provider registries) {
-        return LootItem.lootTableItem(Items.MACE)
-                .apply(enchantStandardTool(registries))
-                .apply(enchant(registries, Enchantments.DENSITY, 5.0F))
-                .apply(enchant(registries, Enchantments.BREACH, 4.0F))
-                .apply(enchant(registries, Enchantments.WIND_BURST, 3.0F));
     }
 
     private static SetEnchantmentsFunction.Builder enchantStandardTool(HolderGetter.Provider registries) {

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class BastionCleanup {
     private static final double PIGLIN_BRUTE_MAX_HEALTH = 20.0;
-    private static final double PIGLIN_MAX_HEALTH = 10.0;
 
     public static void init() {
         ServerEntityEvents.ENTITY_LOAD.register(BastionCleanup::cleanEntity);
@@ -37,28 +36,5 @@ public class BastionCleanup {
         }
 
         piglinBrute.setHealth((float) PIGLIN_BRUTE_MAX_HEALTH);
-    }
-
-    private static void cleanPiglin(Entity entity, ServerLevel world) {
-        if (!entity.getType().equals(EntityType.PIGLIN_BRUTE)) {
-            return;
-        }
-
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            return;
-        }
-
-        weakenPiglinBrute(livingEntity);
-    }
-
-    private static void weakenPiglin(LivingEntity piglin) {
-        AttributeInstance maxHealth =
-                piglin.getAttribute(Attributes.MAX_HEALTH);
-
-        if (maxHealth != null) {
-            maxHealth.setBaseValue(PIGLIN_BRUTE_MAX_HEALTH);
-        }
-
-        piglin.setHealth((float) PIGLIN_BRUTE_MAX_HEALTH);
     }
 }

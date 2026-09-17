@@ -5,27 +5,25 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class DuperMenu extends AbstractContainerMenu {
-    public static final int AUTO_DUPE_BUTTON = 0;
-    private static final int DUPER_SLOT_COUNT = 2;
+    public static final int DUPE_BUTTON = 0;
+    private static final int ITEM_SLOT_COUNT = 2;
+    private static final int DUPER_SLOT_COUNT = 3;
     private static final int PLAYER_INVENTORY_START = DUPER_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;
     private static final int HOTBAR_START = PLAYER_INVENTORY_END;
     private static final int HOTBAR_END = HOTBAR_START + 9;
 
     private final Container container;
-    private final ContainerData data;
     private final ContainerLevelAccess access;
-    private final boolean duplicateOnClose;
 
     public DuperMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new SimpleContainer(DUPER_SLOT_COUNT), new SimpleContainerData(1), ContainerLevelAccess.NULL, false);
+        this(containerId, playerInventory, new SimpleContainer(DUPER_SLOT_COUNT), ContainerLevelAccess.NULL);
     }
 
     public DuperMenu(int containerId, Inventory playerInventory, Container container) {
@@ -33,39 +31,34 @@ public class DuperMenu extends AbstractContainerMenu {
                 containerId,
                 playerInventory,
                 container,
-                ((DuperBlockEntity) container).getData(),
-                ContainerLevelAccess.create(playerInventory.player.level(), ((DuperBlockEntity) container).getBlockPos()),
-                true
+                ContainerLevelAccess.create(playerInventory.player.level(), ((DuperBlockEntity) container).getBlockPos())
         );
     }
 
-    private DuperMenu(int containerId, Inventory playerInventory, Container container, ContainerData data, ContainerLevelAccess access, boolean duplicateOnClose) {
+    private DuperMenu(int containerId, Inventory playerInventory, Container container, ContainerLevelAccess access) {
         super(DuperBlocks.DUPER_MENU, containerId);
         checkContainerSize(container, DUPER_SLOT_COUNT);
-        checkContainerDataCount(data, 1);
 
         this.container = container;
-        this.data = data;
         this.access = access;
-        this.duplicateOnClose = duplicateOnClose;
 
         container.startOpen(playerInventory.player);
-        addDataSlots(data);
 
         addSlot(new Slot(container, 0, 44, 44));
         addSlot(new Slot(container, 1, 80, 44));
+        addSlot(new Slot(container, DuperBlockEntity.PAYMENT_SLOT, 134, 35) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.is(Items.DIAMOND);
+            }
+        });
         addStandardInventorySlots(playerInventory, 8, 84);
-    }
-
-    public boolean isAutoDupeEnabled() {
-        return data.get(0) != 0;
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        if (id == AUTO_DUPE_BUTTON && container instanceof DuperBlockEntity duperBlockEntity) {
-            duperBlockEntity.toggleAutoDupe();
-            return true;
+        if (id == DUPE_BUTTON && container instanceof DuperBlockEntity duperBlockEntity) {
+            return duperBlockEntity.duplicateContents(player);
         }
 
         return super.clickMenuButton(player, id);
@@ -89,6 +82,10 @@ public class DuperMenu extends AbstractContainerMenu {
                 if (!moveItemStackTo(stack, PLAYER_INVENTORY_START, HOTBAR_END, true)) {
                     return ItemStack.EMPTY;
                 }
+            } else if (stack.is(Items.DIAMOND)) {
+                if (!moveItemStackTo(stack, DuperBlockEntity.PAYMENT_SLOT, DuperBlockEntity.PAYMENT_SLOT + 1, false)) {
+                    return ItemStack.EMPTY;
+                }
             } else if (!moveItemStackTo(stack, 0, DUPER_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;
             }
@@ -107,9 +104,5 @@ public class DuperMenu extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         container.stopOpen(player);
-
-        if (duplicateOnClose && container instanceof DuperBlockEntity duperBlockEntity && !player.level().isClientSide()) {
-            duperBlockEntity.duplicateContents();
-        }
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class DuperScreen extends AbstractContainerScreen<DuperMenu> {
-    private Button autoDupeButton;
+    private Button dupeButton;
 
     public DuperScreen(DuperMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -21,22 +21,18 @@ public class DuperScreen extends AbstractContainerScreen<DuperMenu> {
         super.init();
         titleLabelX = (imageWidth - font.width(title)) / 2;
 
-        autoDupeButton = Button.builder(autoDupeLabel(), button -> {
+        dupeButton = Button.builder(Component.literal("Dupe"), button -> {
                     if (minecraft != null && minecraft.gameMode != null) {
-                        minecraft.gameMode.handleInventoryButtonClick(menu.containerId, DuperMenu.AUTO_DUPE_BUTTON);
+                        minecraft.gameMode.handleInventoryButtonClick(menu.containerId, DuperMenu.DUPE_BUTTON);
                     }
                 })
-                .bounds(leftPos + 113, topPos + 37, 52, 20)
+                .bounds(leftPos + 113, topPos + 64, 52, 18)
                 .build();
-        addRenderableWidget(autoDupeButton);
+        addRenderableWidget(dupeButton);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (autoDupeButton != null) {
-            autoDupeButton.setMessage(autoDupeLabel());
-        }
-
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
     }
@@ -54,14 +50,15 @@ public class DuperScreen extends AbstractContainerScreen<DuperMenu> {
         graphics.fill(x + 12, y + 18, x + 166, y + 68, 0xff3f3f3f);
         graphics.fill(x + 14, y + 20, x + 164, y + 66, 0xff1a1a1f);
         graphics.fill(x + 16, y + 22, x + 106, y + 64, 0xff0f0f14);
-        graphics.fill(x + 110, y + 22, x + 162, y + 64, menu.isAutoDupeEnabled() ? 0xff2a113f : 0xff171717);
+        graphics.fill(x + 110, y + 22, x + 162, y + 64, 0xff171717);
 
         graphics.drawString(font, "Items", x + 44, y + 31, 0xffe0e0e0, false);
-        graphics.drawString(font, "Auto", x + 126, y + 27, 0xffe0e0e0, false);
-        graphics.drawString(font, menu.isAutoDupeEnabled() ? "ON" : "OFF", x + 129, y + 57, menu.isAutoDupeEnabled() ? 0xffc77dff : 0xffa0a0a0, false);
+        graphics.drawString(font, "Pay", x + 126, y + 27, 0xffe0e0e0, false);
+        graphics.drawString(font, "100 XP", x + 121, y + 55, 0xff8ef58e, false);
 
         drawSlot(graphics, x + 43, y + 43);
         drawSlot(graphics, x + 79, y + 43);
+        drawSlot(graphics, x + 133, y + 34);
 
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 9; column++) {
@@ -82,7 +79,4 @@ public class DuperScreen extends AbstractContainerScreen<DuperMenu> {
         graphics.fill(x + 2, y + 2, x + 16, y + 16, 0xff8b8b8b);
     }
 
-    private Component autoDupeLabel() {
-        return Component.literal(menu.isAutoDupeEnabled() ? "On" : "Off");
-    }
 }

@@ -73,7 +73,6 @@ public class VillageBuff implements ModInitializer {
 			if (BuiltInLootTables.BASTION_TREASURE.equals(key)) {
 
 				BastionTreasurePools.init(registries, tableBuilder);
-				BastionChestPools.init(tableBuilder);
 			}
 
 			if (BuiltInLootTables.END_CITY_TREASURE.equals(key)) {

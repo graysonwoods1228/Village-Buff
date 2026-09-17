@@ -7,6 +7,14 @@ pluginManagement {
 		mavenCentral()
 		gradlePluginPortal()
 	}
+	resolutionStrategy {
+		eachPlugin {
+			if (requested.id.id == 'net.fabricmc.fabric-loom'
+					|| requested.id.id == 'net.fabricmc.fabric-loom-remap') {
+				useModule("net.fabricmc:fabric-loom:${requested.version}")
+			}
+		}
+	}
 }
 
 // Should match your modid

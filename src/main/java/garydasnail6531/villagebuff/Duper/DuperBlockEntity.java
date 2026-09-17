@@ -8,9 +8,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -18,72 +19,32 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DuperBlockEntity extends BaseContainerBlockEntity {
-    private static final int CONTAINER_SIZE = 2;
-    private static final int AUTO_DUPE_INTERVAL_TICKS = 20;
+    public static final int PAYMENT_SLOT = 2;
+    private static final int CONTAINER_SIZE = 3;
+    private static final int PAYMENT_XP = 100;
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
-    private boolean autoDupe;
-    private int autoDupeCooldown;
-    private final ContainerData data = new ContainerData() {
-        @Override
-        public int get(int index) {
-            return index == 0 && autoDupe ? 1 : 0;
-        }
-
-        @Override
-        public void set(int index, int value) {
-            if (index == 0) {
-                setAutoDupe(value != 0);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-    };
 
     public DuperBlockEntity(BlockPos pos, BlockState state) {
         super(DuperBlocks.DUPER_BLOCK_ENTITY, pos, state);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, DuperBlockEntity blockEntity) {
-        if (!blockEntity.autoDupe) {
-            blockEntity.autoDupeCooldown = 0;
-            return;
+    public boolean canDuplicate(Player player) {
+        if (level == null || level.isClientSide() || !hasItemsToDuplicate()) {
+            return false;
         }
 
-        blockEntity.autoDupeCooldown++;
-        if (blockEntity.autoDupeCooldown >= AUTO_DUPE_INTERVAL_TICKS) {
-            blockEntity.autoDupeCooldown = 0;
-            blockEntity.duplicateContents();
-        }
+        return hasPaymentDiamond() && hasEnoughExperience(player);
     }
 
-    public ContainerData getData() {
-        return data;
-    }
-
-    public boolean isAutoDupe() {
-        return autoDupe;
-    }
-
-    public void setAutoDupe(boolean autoDupe) {
-        this.autoDupe = autoDupe;
-        setChanged();
-    }
-
-    public void toggleAutoDupe() {
-        setAutoDupe(!autoDupe);
-    }
-
-    public void duplicateContents() {
-        if (level == null || level.isClientSide()) {
-            return;
+    public boolean duplicateContents(Player player) {
+        if (!canDuplicate(player)) {
+            return false;
         }
 
-        boolean duplicatedAny = false;
+        consumePayment(player);
 
-        for (ItemStack stack : items) {
+        for (int slot = 0; slot < PAYMENT_SLOT; slot++) {
+            ItemStack stack = items.get(slot);
             if (!stack.isEmpty()) {
                 Containers.dropItemStack(
                         level,
@@ -92,11 +53,10 @@ public class DuperBlockEntity extends BaseContainerBlockEntity {
                         worldPosition.getZ() + 0.5,
                         stack.copy()
                 );
-                duplicatedAny = true;
             }
         }
 
-        if (duplicatedAny && level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(
                     ParticleTypes.PORTAL,
                     worldPosition.getX() + 0.5,
@@ -119,6 +79,35 @@ public class DuperBlockEntity extends BaseContainerBlockEntity {
                     0.25,
                     0.03
             );
+        }
+
+        setChanged();
+        return true;
+    }
+
+    private boolean hasItemsToDuplicate() {
+        for (int slot = 0; slot < PAYMENT_SLOT; slot++) {
+            if (!items.get(slot).isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean hasPaymentDiamond() {
+        return items.get(PAYMENT_SLOT).is(Items.DIAMOND);
+    }
+
+    private boolean hasEnoughExperience(Player player) {
+        return player.getAbilities().instabuild || player.totalExperience >= PAYMENT_XP;
+    }
+
+    private void consumePayment(Player player) {
+        items.get(PAYMENT_SLOT).shrink(1);
+
+        if (!player.getAbilities().instabuild) {
+            player.giveExperiencePoints(-PAYMENT_XP);
         }
     }
 
@@ -152,13 +141,11 @@ public class DuperBlockEntity extends BaseContainerBlockEntity {
         super.loadAdditional(input);
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
-        autoDupe = input.getBooleanOr("AutoDupe", false);
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, items);
-        output.putBoolean("AutoDupe", autoDupe);
     }
 }
