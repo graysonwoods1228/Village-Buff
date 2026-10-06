@@ -56,16 +56,32 @@ These trades are designed to provide unique progression options and reward playe
 
 ## Compatibility
 
-* Minecraft **1.21.x**
-* Fabric Loader
-* Fabric API
+This repository currently builds the **Fabric** edition.
+
+| Platform | Status | Notes |
+| --- | --- | --- |
+| Fabric | Supported target | Metadata allows Minecraft `1.21.11+`; each new Minecraft release still needs a test build because Mojang mappings and APIs can change. |
+| Forge / NeoForge | Not ported yet | Requires a separate loader entrypoint, registry setup, screen registration, event hooks, and metadata. |
+| Paper | Not ported yet | Requires a Bukkit/Paper plugin rewrite. The custom Duper block/menu cannot be provided as a normal client-visible block without a modded client or a different implementation. |
+| Vanilla | Partial datapack only | Vanilla can only support datapack-style features such as loot tables, recipes, tags, and functions. The Duper block, custom GUI, Java trade hooks, and mixins are not possible in pure vanilla. |
+
+The Fabric metadata is intentionally broad for `1.21.11+`, but that is not a promise that one jar will run unchanged forever. Minecraft `1.26+` support will require testing against those released mappings/APIs when they exist.
 
 ## Installation
 
 1. Install the Fabric Loader.
 2. Install the Fabric API.
-3. Place the Village Buff `.jar` into your `mods` folder.
+3. Place the Village Buff Fabric `.jar` into your `mods` folder.
 4. Launch Minecraft.
+
+## Porting Targets
+
+To release this on every requested platform, split the project into separate deliverables:
+
+* `fabric`: current implementation.
+* `forge` or `neoforge`: loader-specific Java port.
+* `paper`: server plugin rewrite for server-side-only features.
+* `vanilla-datapack`: limited datapack version for loot/recipe/function content only.
 
 ## Future Plans
 

@@ -13,6 +13,8 @@ public class SpawnBonusChestPools {
                 .with(ImprovedLootPoolHelpers.stacked(Items.STONE_PICKAXE, 1.0F, 1.0F).setWeight(8).build())
                 .with(ImprovedLootPoolHelpers.stacked(Items.STONE_AXE, 1.0F, 1.0F).setWeight(8).build())
                 .with(ImprovedLootPoolHelpers.stacked(Items.OAK_LOG, 4.0F, 10.0F).setWeight(8).build())
+                .with(ImprovedLootPoolHelpers.stacked(Items.IRON_PICKAXE, 1.0F, 1.0F).setWeight(8).build())
+                .with(ImprovedLootPoolHelpers.stacked(Items.DIAMOND, 1.0F, 2.0F).setWeight(4).build())
                 .build());
     }
 }
