@@ -20,10 +20,37 @@ import garydasnail6531.villagebuff.pools.StrongholdPools;
 import garydasnail6531.villagebuff.pools.TrialChamberPools;
 import garydasnail6531.villagebuff.pools.tanneryPools;
 import garydasnail6531.villagebuff.trades.FletcherTrades;
+import garydasnail6531.villagebuff.trades.LibrarianTrades;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,27 +59,31 @@ import org.slf4j.LoggerFactory;
 public class VillageBuff implements ModInitializer {
 	public static final String MOD_ID = "villagebuff";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	private static final int CHEST_CHUNKS_PER_TICK = 64;
+	private final Map<ServerLevel, LinkedHashSet<Long>> pendingChestChunks = new IdentityHashMap<>();
 
 
 
 	@Override
 	public void onInitialize() {
 
-		DuperBlocks.init();
-		BastionCleanup.init();
+//		DuperBlocks.init();
+//		BastionCleanup.init();
 
-		CommandRegistrationCallback.EVENT.register(
-				(dispatcher, registryAccess, environment) -> {
-					BlacksmithTradesCommands.register(dispatcher);
-					FarmerTradesCommands.register(dispatcher);
-					ClericTradesCommands.register(dispatcher);
-					FletcherTradesCommands.register(dispatcher);
-					TeleportBastionCommands.register(dispatcher);
-					TeleportVillageCommands.register(dispatcher);
-				}
-		);
+//		CommandRegistrationCallback.EVENT.register(
+//				(dispatcher, registryAccess, environment) -> {
+//					BlacksmithTradesCommands.register(dispatcher);
+//					FarmerTradesCommands.register(dispatcher);
+//					ClericTradesCommands.register(dispatcher);
+//					FletcherTradesCommands.register(dispatcher);
+//					LibrarianTradesCommands.register(dispatcher);
+//					TeleportBastionCommands.register(dispatcher);
+//					TeleportVillageCommands.register(dispatcher);
+//				}
+//		);
 
 		FletcherTrades.init();
+		LibrarianTrades.init();
 
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 
