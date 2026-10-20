@@ -32,6 +32,10 @@ public class BlacksmithTrades {
         return new ItemStack(Items.DIAMOND_BLOCK, 1);
     }
 
+    public static ItemStack diamond(RegistryAccess registryAccess) {
+        return new ItemStack(Items.DIAMOND, 9);
+    }
+
     public static ItemStack netheriteUpgradeTemplate(RegistryAccess registryAccess) {
         return new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1);
     }
@@ -250,11 +254,11 @@ public class BlacksmithTrades {
 
                 // 8 Diamonds -> 1 Diamond Block
                 new TradeData(
-                        new ItemCost(Items.DIAMOND, 8),
-                        BlacksmithTrades::diamondBlock,
+                        new ItemCost(Items.DIAMOND, 4),
+                        BlacksmithTrades::diamond,
                         500,
                         99999999,
-                        0.00f
+                        -2.00f
                 )
         );
     }

@@ -5,6 +5,7 @@ import garydasnail6531.villagebuff.commands.BlacksmithTradesCommands;
 import garydasnail6531.villagebuff.commands.ClericTradesCommands;
 import garydasnail6531.villagebuff.commands.FarmerTradesCommands;
 import garydasnail6531.villagebuff.commands.FletcherTradesCommands;
+import garydasnail6531.villagebuff.commands.LibrarianTradesCommands;
 import garydasnail6531.villagebuff.commands.TeleportBastionCommands;
 import garydasnail6531.villagebuff.commands.TeleportVillageCommands;
 import garydasnail6531.villagebuff.pools.BastionChestPools;
@@ -23,11 +24,10 @@ import garydasnail6531.villagebuff.trades.FletcherTrades;
 import garydasnail6531.villagebuff.trades.LibrarianTrades;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -42,27 +42,25 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class VillageBuff implements ModInitializer {
 	public static final String MOD_ID = "villagebuff";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	private static final int CHEST_CHUNKS_PER_TICK = 64;
 	private final Map<ServerLevel, LinkedHashSet<Long>> pendingChestChunks = new IdentityHashMap<>();
-
-
 
 	@Override
 	public void onInitialize() {
@@ -89,25 +87,18 @@ public class VillageBuff implements ModInitializer {
 
 			// 1. Advanced Weaponsmith chest overhaul
 			if (BuiltInLootTables.VILLAGE_WEAPONSMITH.equals(key)) {
-
 				BlacksmithPools.init(registries, tableBuilder);
-
 			}
 
-			// 2. Modifying regular Plains Village houses (Keeping your previous guaranteed setup)
-			// Tannery chest loot
 			if (BuiltInLootTables.VILLAGE_TANNERY.equals(key)) {
-
 				tanneryPools.init(registries, tableBuilder);
 			}
 
 			if (BuiltInLootTables.BASTION_TREASURE.equals(key)) {
-
 				BastionTreasurePools.init(registries, tableBuilder);
 			}
 
 			if (BuiltInLootTables.END_CITY_TREASURE.equals(key)) {
-
 				EndCityTreasurePools.init(registries, tableBuilder);
 			}
 
@@ -158,120 +149,187 @@ public class VillageBuff implements ModInitializer {
 
 		});
 
-//		 Make newly generated weaponsmith chests into double chests
-//		ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
-//			makeWeaponsmithChestsDouble(world, chunk);
-//		});
-//
-//		} // <-- closes onInitialize()
-//
-//	private static void makeWeaponsmithChestsDouble(ServerLevel world, LevelChunk chunk) {
-//
-//		for (BlockEntity blockEntity : new ArrayList<>(chunk.getBlockEntities().values())) {
-//
-//			if (!(blockEntity instanceof ChestBlockEntity chest)) {
-//				continue;
-//			}
-//
-//			BlockPos originalPos = chest.getBlockPos();
-//			BlockState originalState = world.getBlockState(originalPos);
-//
-//			// Make sure this is a single normal chest.
-//			if (!originalState.is(Blocks.CHEST)) {
-//				continue;
-//			}
-//
-//			if (originalState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-//				continue;
-//			}
-//
-//			// Only target the vanilla weaponsmith loot table.
-//			if (!BuiltInLootTables.VILLAGE_WEAPONSMITH.equals(chest.getLootTable())) {
-//				continue;
-//			}
-//
-//			Direction facing = originalState.getValue(ChestBlock.FACING);
-//
-//			// Try the two possible sides of the chest.
-//			Direction firstSide = facing.getClockWise();
-//			BlockPos secondPos = originalPos.relative(firstSide);
-//
-//			if (!world.getBlockState(secondPos).isAir()) {
-//				firstSide = facing.getCounterClockWise();
-//				secondPos = originalPos.relative(firstSide);
-//			}
-//
-//			// Don't replace anything important.
-//			if (!world.getBlockState(secondPos).isAir()) {
-//				continue;
-//			}
-//
-//			boolean secondHalfIsRight = firstSide == facing.getClockWise();
-//
-//			ChestType originalType = secondHalfIsRight
-//					? ChestType.LEFT
-//					: ChestType.RIGHT;
-//
-//			ChestType secondType = secondHalfIsRight
-//					? ChestType.RIGHT
-//					: ChestType.LEFT;
-//
-//			// Generate this loot once into the combined double chest inventory.
-//			ResourceKey<LootTable> lootTableKey = chest.getLootTable();
-//			long lootSeed = chest.getLootTableSeed();
-//
-//			// Change the original chest into one half.
-//			BlockState newOriginalState = originalState
-//					.setValue(ChestBlock.TYPE, originalType);
-//
-//			world.setBlock(originalPos, newOriginalState, 3);
-//
-//			// Place the second half.
-//			BlockState secondState = Blocks.CHEST.defaultBlockState()
-//					.setValue(ChestBlock.FACING, facing)
-//					.setValue(ChestBlock.TYPE, secondType);
-//
-//			world.setBlock(secondPos, secondState, 3);
-//
-//			// Get the newly created second chest.
-//			BlockEntity secondBlockEntity = world.getBlockEntity(secondPos);
-//
-//			if (secondBlockEntity instanceof ChestBlockEntity secondChest) {
-//				ChestBlockEntity originalChest =
-//						(ChestBlockEntity) world.getBlockEntity(originalPos);
-//
-//				if (originalChest != null) {
-//					fillDoubleChestLoot(world, originalPos, originalChest, secondChest, lootTableKey, lootSeed);
-//				}
-//			}
-//		}
-//	}
-//
-//	private static void fillDoubleChestLoot(
-//			ServerLevel world,
-//			BlockPos origin,
-//			ChestBlockEntity originalChest,
-//			ChestBlockEntity secondChest,
-//			ResourceKey<LootTable> lootTableKey,
-//			long lootSeed
-//	) {
-//		originalChest.setLootTable(null);
-//		originalChest.setLootTableSeed(0L);
-//		secondChest.setLootTable(null);
-//		secondChest.setLootTableSeed(0L);
-//
-//		LootTable lootTable = world.getServer().reloadableRegistries().getLootTable(lootTableKey);
-//		LootParams lootParams = new LootParams.Builder(world)
-//				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(origin))
-//				.create(LootContextParamSets.CHEST);
-//
-//		lootTable.fill(new CompoundContainer(originalChest, secondChest), lootParams, lootSeed);
-//		originalChest.setChanged();
-//		secondChest.setChanged();
-//	}
-//
-//	public static Identifier id(String path) {
-//		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+		// The chunk event may run as part of an asynchronous chunk task. Copy only
+		// its coordinates there, then mutate the queue on the main server thread.
+		ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
+			int chunkX = chunk.getPos().x;
+			int chunkZ = chunk.getPos().z;
+
+			world.getServer().execute(() ->
+					queueChestChunks(world, new ChunkPos(chunkX, chunkZ))
+			);
+		});
+
+		ServerTickEvents.END_WORLD_TICK.register(this::processChestChunks);
+		ServerLifecycleEvents.SERVER_STOPPED.register(server -> pendingChestChunks.clear());
 	}
 
-} // <-- closes VillageBuff
+	private void queueChestChunks(ServerLevel world, ChunkPos loadedPos) {
+		LinkedHashSet<Long> pending = pendingChestChunks.computeIfAbsent(
+				world,
+				ignored -> new LinkedHashSet<>()
+		);
+
+		// A newly available neighbor may unblock a chest at a chunk border.
+		for (int dx = -1; dx <= 1; dx++) {
+			for (int dz = -1; dz <= 1; dz++) {
+				pending.add(ChunkPos.asLong(loadedPos.x + dx, loadedPos.z + dz));
+			}
+		}
+	}
+
+	private void processChestChunks(ServerLevel world) {
+		LinkedHashSet<Long> pending = pendingChestChunks.get(world);
+		if (pending == null) {
+			return;
+		}
+
+		ArrayList<Long> batch = new ArrayList<>(CHEST_CHUNKS_PER_TICK);
+		var iterator = pending.iterator();
+
+		while (iterator.hasNext() && batch.size() < CHEST_CHUNKS_PER_TICK) {
+			batch.add(iterator.next());
+			iterator.remove();
+		}
+
+		if (pending.isEmpty()) {
+			pendingChestChunks.remove(world);
+		}
+
+		for (long packedPos : batch) {
+			ChunkPos pos = new ChunkPos(packedPos);
+
+			// Never force an unloaded chunk to load.
+			LevelChunk chunk = world.getChunkSource().getChunkNow(pos.x, pos.z);
+			if (chunk != null) {
+				makeWeaponsmithChestsDouble(world, chunk);
+			}
+		}
+	}
+
+	private static boolean hasLoadedNeighbors(ServerLevel world, BlockPos pos) {
+		// Placement updates adjacent blocks, so include the update area as well.
+		for (int x = (pos.getX() - 1) >> 4; x <= (pos.getX() + 1) >> 4; x++) {
+			for (int z = (pos.getZ() - 1) >> 4; z <= (pos.getZ() + 1) >> 4; z++) {
+				if (world.getChunkSource().getChunkNow(x, z) == null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private static void makeWeaponsmithChestsDouble(ServerLevel world, LevelChunk chunk) {
+		// Include positions whose block entities are still stored as pending NBT.
+		for (BlockPos originalPos : new ArrayList<>(chunk.getBlockEntitiesPos())) {
+			BlockState originalState = chunk.getBlockState(originalPos);
+
+			if (!originalState.is(Blocks.CHEST)
+					|| originalState.getValue(ChestBlock.TYPE) != ChestType.SINGLE
+					|| !hasLoadedNeighbors(world, originalPos)) {
+				continue;
+			}
+
+			BlockEntity blockEntity = chunk.getBlockEntity(originalPos);
+			if (!(blockEntity instanceof ChestBlockEntity chest)) {
+				continue;
+			}
+
+			// Only target unopened vanilla weaponsmith loot chests.
+			if (!BuiltInLootTables.VILLAGE_WEAPONSMITH.equals(chest.getLootTable())) {
+				continue;
+			}
+
+			Direction facing = originalState.getValue(ChestBlock.FACING);
+
+			// Try the two possible sides of the chest.
+			Direction firstSide = facing.getClockWise();
+			BlockPos secondPos = originalPos.relative(firstSide);
+
+			if (!hasLoadedNeighbors(world, secondPos)
+					|| !world.getBlockState(secondPos).isAir()) {
+				firstSide = facing.getCounterClockWise();
+				secondPos = originalPos.relative(firstSide);
+			}
+
+			// Don't replace anything important.
+			if (!hasLoadedNeighbors(world, secondPos)
+					|| !world.getBlockState(secondPos).isAir()) {
+				continue;
+			}
+
+			boolean secondHalfIsRight = firstSide == facing.getClockWise();
+
+			ChestType originalType = secondHalfIsRight
+					? ChestType.LEFT
+					: ChestType.RIGHT;
+
+			ChestType secondType = secondHalfIsRight
+					? ChestType.RIGHT
+					: ChestType.LEFT;
+
+			// Preserve the loot table and seed before changing either block.
+			ResourceKey<LootTable> lootTableKey = chest.getLootTable();
+			long lootSeed = chest.getLootTableSeed();
+
+			BlockState newOriginalState = originalState
+					.setValue(ChestBlock.TYPE, originalType);
+			world.setBlock(originalPos, newOriginalState, 3);
+
+			BlockState secondState = Blocks.CHEST.defaultBlockState()
+					.setValue(ChestBlock.FACING, facing)
+					.setValue(ChestBlock.TYPE, secondType);
+			world.setBlock(secondPos, secondState, 3);
+
+			BlockEntity secondBlockEntity = world.getBlockEntity(secondPos);
+			BlockEntity originalBlockEntity = world.getBlockEntity(originalPos);
+
+			if (secondBlockEntity instanceof ChestBlockEntity secondChest
+					&& originalBlockEntity instanceof ChestBlockEntity originalChest) {
+				fillDoubleChestLoot(
+						world,
+						originalPos,
+						originalChest,
+						secondChest,
+						lootTableKey,
+						lootSeed
+				);
+			}
+		}
+	}
+
+	private static void fillDoubleChestLoot(
+			ServerLevel world,
+			BlockPos origin,
+			ChestBlockEntity originalChest,
+			ChestBlockEntity secondChest,
+			ResourceKey<LootTable> lootTableKey,
+			long lootSeed
+	) {
+		originalChest.setLootTable(null);
+		originalChest.setLootTableSeed(0L);
+		secondChest.setLootTable(null);
+		secondChest.setLootTableSeed(0L);
+
+		LootTable lootTable = world.getServer()
+				.reloadableRegistries()
+				.getLootTable(lootTableKey);
+
+		LootParams lootParams = new LootParams.Builder(world)
+				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(origin))
+				.create(LootContextParamSets.CHEST);
+
+		lootTable.fill(
+				new CompoundContainer(originalChest, secondChest),
+				lootParams,
+				lootSeed
+		);
+
+		originalChest.setChanged();
+		secondChest.setChanged();
+	}
+
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+	}
+}

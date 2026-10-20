@@ -3,7 +3,7 @@
 	"id": "villagebuff",
 	"version": "${version}",
 	"name": "VillageBuff",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Improves village, structure, and progression rewards while keeping the vanilla feel.",
 	"authors": [
 		"Me!"
 	],
@@ -31,7 +31,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",
-		"minecraft": "~1.21.11",
+		"minecraft": ">=1.21.11",
 		"java": ">=21",
 		"fabric-api": "*"
 	}
